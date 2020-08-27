@@ -63,7 +63,33 @@ String uploadedImageUrl = await AmazonS3Cognito.upload(
 
 ### Android
 
-No configuration required - the plugin should work out of the box.          
+No configuration required for Debug - the plugin should work out of the box.
+
+For Release Version. You need to configure proguard.
+
+1. Add below config at `android/app/build.gradle` file inside `buildTypes` section.
+
+```
+buildTypes {
+    release {
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.debug
+            multiDexEnabled true
+            minifyEnabled true
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+            'proguard-rules.pro'
+        }
+}
+```
+2. Create `proguard-rules.pro` File at `android\app\proguard-rules.pro` and add below content.
+
+```
+-keep class com.amazonaws.** { *; }
+-keep class com.amazon.** { *; }
+-keep class com.pycampers.** { *; }
+```
+
 
 
 ### iOS
